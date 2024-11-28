@@ -1,0 +1,46 @@
+{% if products %}
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover">
+      <thead>
+        <tr>
+          <th class="text-center">{{ column_image }}</th>
+          <th>{{ column_name }}</th>
+          <th>{{ column_model }}</th>
+          <th class="text-end">{{ column_stock }}</th>
+          <th class="text-end">{{ column_price }}</th>
+          <th class="text-end">{{ column_action }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+          <tr>
+            <td class="text-center">{% if product.thumb %}<a href="{{ product.href }}"><img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}"/></a>{% endif %}</td>
+            <td><a href="{{ product.href }}">{{ product.name }}</a></td>
+            <td>{{ product.model }}</td>
+            <td class="text-end">{{ product.stock }}</td>
+            <td class="text-end">
+              {% if product.price %}
+                <div class="price">
+                  {% if not product.special %}
+                    {{ product.price }}
+                  {% else %}
+                    <b>{{ product.special }}</b> <s>{{ product.price }}</s>
+                  {% endif %}
+                </div>
+              {% endif %}</td>
+            <td class="text-end">
+              <form method="post" data-oc-toggle="ajax" data-oc-load="{{ wishlist }}" data-oc-target="#wishlist">
+                <input type="hidden" name="product_id" value="{{ product.product_id }}"/>
+                <input type="hidden" name="quantity" value="{{ product.minimum }}"/>
+                <button type="submit" formaction="{{ cart_add }}" data-bs-toggle="tooltip" title="{{ button_cart }}" class="btn btn-primary"><i class="fa-solid fa-cart-shopping fa-fw"></i></button>
+                <a href="{{ product.remove }}" data-bs-toggle="tooltip" title="{{ button_remove }}" class="btn btn-danger"><i class="fa-solid fa-circle-xmark fa-fw"></i></a>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% else %}
+  <p>{{ text_no_results }}</p>
+{% endif %}
